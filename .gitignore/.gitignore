@@ -1,0 +1,92 @@
+setwd("C:/Users/Andr� Confetti/Dropbox/Disserta��o/Evolu��o do canto em Terraranae/Cap02/Estatistica/Arvore")
+
+library("geiger")
+library("phytools")
+library ("plyr")
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Carrega bibliotecas necessárias à execução dos dados
+library("phytools")
+
+
+# Carrega leitor Newick robusto
+source( "read_newick.R" )
+
+# Lê a árvore a partir do arquivo nexus e armazena no objeto "arvore"
+##### ATENÇÃO: É NECESSÁRIO SUBSTITUIR O CAMINHO PARA O ARQUIVO #####
+arvore<-read.newick( "arvore.txt" )
+
+# Elimina nós que tenham um único descendente; esta etapa não altera a topologia da árvore, mas é uma etapa necessária à reconstrução
+arvore_col<-collapse.singles( arvore )
+
+# Enraiza a árvore em Choanofalgellata
+#### ATENÇÃO: VOCÊ PODE NECESSITAR DE OUTRA RAIZ SE SUA TOPOLOGIA FOR DIFERENTE ####
+arvore_raiz<-root( arvore_col, "Homo_sapiens" )
+
+# Padroniza orientação dos clados na árvore
+arvore_ld<-compute.brlen( arvore_raiz, right = TRUE ) 
+
+# Determina comprimento de ramos da árvore de acordo com o método de Graffen na potência 1; gera árvore ultramétrica
+arvore_cr<-compute.brlen( arvore_ld, method = "Graffen", power = 1 )
+
+# Dicotomiza a árvore aleatoriamente
+arvore_bi<-multi2di( arvore_cr, random = TRUE )
+
+# Adiciona uma quantidade �???nfima aos ramos para torná-los diferentes de zero
+arvore_sz<-compute.brlen( arvore_bi, arvore_bi$edge.length + 0.00001 )
+
+# Grava árvore em formato NEXUS
+write.nexus( arvore_sz, file = "C:/Users/Andr� Confetti/Dropbox/Disserta��o/Evolu��o do canto em Terraranae/Cap02/Estatistica/Arvore/arvore.nex", translate = TRUE )
+
+
+
+
+Arvore_anura<-read.nexus("arvore.nex")
+plot(Arvore_anura)
+Arvore_teste<-read.tree("arvore.txt")
+
+
+
+
+
+
+
+
+
+
+tree<-Arvore_teste
+write.tree(tree)
+plot(tree)
+species<-c("Pristimantis_altamazonicus","Pristimantis_aureoventris","Pristimantis_bambu","Pristimantis_bicantus","Pristimantis_bromeliaceus",
+           "Pristimantis_calcarulatus","Pristimantis_caryophyllaceus","Pristimantis_colomai", "Oreobates_crepitans","Pristimantis_danae","Pristimantis_eremitus",
+           "Pristimantis_espedeus","Pristimantis_fenestratus", "Pristimantis_ganonotus", "Pristimantis_lacrimosus", "Pristimantis_mazar",
+           "Pristimantis_mindo", "Pristimantis_muchimuk", "Pristimantis_orcus", "Pristimantis_petersi", "Pristimantis_phoxocephalus", "Pristimantis_ramagii",
+           "Pristimantis_reichlei", "Pristimantis_samaipatae", "Pristimantis_subsigillatus", "Pristimantis_ventrigranulosus", "Pristimantis_vilarsi", "Pristimantis_dundeei",
+           "Psychrophrynella_ankohuma", "Psychrophrynella_chacaltaya", "Psychrophrynella_iatamasi", "Psychrophrynella_illampu", "Psychrophrynella_katantika", "Psychrophrynella_kempffi",
+           "Psychrophrynella_saltator", "Psychrophrynella_wettsteini", "Oreobates_ayacucho", "Oreobates_barituensis", "Oreobates_discoidalis",
+           "Oreobates_remotus", "Barycholos_ternetzi", "Holoaden_luederwaldti","Bryophryne_gymnotis", "Craugastor_fitzingeri", "Craugastor_gollmeri", "Craugastor_noblei", "Craugastor_raniformis",
+           "Haddadus_aramunha", "Haddadus_binotatus", "Ischnocnema_abdita", "Ischnocnema_henselii", "Ischnocnema_izecksohni", "Ischnocnema_juipoca","Ischnocnema_nigriventris", "Ischnocnema_oea",
+           "Ischnocnema_parva", "Ischnocnema_penaxavantinho", "Oreobates_quixensis", "Ischnocnema_vizottoi", "Brachycephalus_brunneus", "Brachycephalus_ephippium", "Brachycephalus_hermogenesi", "Brachycephalus_pernix", "Brachycephalus_pitanga",
+           "Brachycephalus_tridactylus", "Phyzelaphryne_miriamae", "Adelophryne_gutturosa", "Adelophryne_maranguapensis", "Adelophryne_mucronatus", "Adelophryne_patamona", "Diasporus_anthrax", "Diasporus_citrinobapheus", "Diasporus_diastema",
+           "Diasporus_gularis", "Diasporus_tinker", "Diasporus_ventrimaculatus", "Eleutherodactylus_abbotti", "Eleutherodactylus_acmonis", "Eleutherodactylus_amadeus", "Eleutherodactylus_antillensis", "Pristimantis_ashkapara",
+           "Craugastor_augusti", "Pristimantis_aureolineatus", "Eleutherodactylus_auriculatus", "Eleutherodactylus_bartonsmithi", "Eleutherodactylus_blairhedgesi", "Eleutherodactylus_bresslerae",
+           "Eleutherodactylus_brittoni", "Pristimantis_buccinator", "Eleutherodactylus_caribe", "Pristimantis_charlottevillensis","Eleutherodactylus_cochranae", "Eleutherodactylus_cooki", "Eleutherodactylus_coqui",
+           "Eleutherodactylus_corona", "Eleutherodactylus_dimidiatus", "Oreobates_discoidalis", "Eleutherodactylus_dolomedes",  "Eleutherodactylus_eileenae", "Eleutherodactylus_eneidae", "Eleutherodactylus_feichtingeri", "Pristimantis_fenestratus",
+           "Craugastor_fitzingeri", "Eleutherodactylus_flavescens", "Pristimantis_fraudator", "Eleutherodactylus_glamyrus", "Eleutherodactylus_glaphycompus", "Eleutherodactylus_greyi", "Eleutherodactylus_gryllus", "Eleutherodactylus_guantanamera",
+           "Ischnocnema_guentheri", "Eleutherodactylus_hedricki", "Ischnocnema_henselii", "Oreobates_heterodactylus", "Eleutherodactylus_inoptatus", "Eleutherodactylus_ionthus", "Eleutherodactylus_johnstonei", "Eleutherodactylus_leberi", "Pristimantis_llojsintuta", 
+           "Eleutherodactylus_locustus", "Oreobates_madidi", "Ischnocnema_manezinho", "Eleutherodactylus_mariposa", "Eleutherodactylus_melacara", "Eleutherodactylus_michaelschmidi", "Pristimantis_olivaceus", "Pristimantis_peruvianus")
+x<-pruned.tree<-drop.tip(tree,tree$tip.label[-match(species, tree$tip.label)])
+write.tree(pruned.tree)
+plot(pruned.tree)
+plot(x, label.offset=0.001, cex=0.7, show.node.label=TRUE, no.margin=T)
